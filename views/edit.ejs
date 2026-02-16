@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SocialHub - Edit Post</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); min-height: 100vh;">
+  <nav class="border-b sticky top-0 z-50" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-color: #e5e7eb; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <a href="/profile" class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">SocialHub</a>
+        <a href="/logout" class="px-5 py-2.5 rounded-lg transition" style="color: #ef4444; border: 1.5px solid #fecaca;">
+          <i class="fas fa-sign-out-alt mr-2"></i>Logout
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-2xl mx-auto px-4 py-12">
+    <a href="/profile" class="inline-flex items-center gap-2 mb-8 text-lg hover:gap-3 transition" style="color: #3b82f6; text-decoration: none;">
+      <i class="fas fa-arrow-left"></i> Back to Profile
+    </a>
+
+    <div class="rounded-2xl" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border: 1px solid #e5e7eb; box-shadow: 0 20px 60px -10px rgba(0,0,0,0.15); padding: 40px;">
+      <div class="mb-6">
+        <h2 class="text-3xl font-bold mb-2" style="color: #1f2937;"><i class="fas fa-pencil-alt mr-2" style="color: #3b82f6;"></i>Edit Your Post</h2>
+        <p style="color: #6b7280;">Update the content of your post</p>
+      </div>
+      
+      <form method="post" action="/update/<%= post._id %>" class="space-y-6">
+        <div>
+          <label class="block text-sm font-semibold mb-3" style="color: #374151;">Post Content</label>
+          <textarea 
+            placeholder="Share your thoughts..." 
+            class="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 resize-none transition"
+            style="border-color: #e5e7eb; color: #1f2937; min-height: 200px;"
+            name="content"
+            rows="8"
+            required
+          ><%=post.content%></textarea>
+          <p class="text-xs mt-2" style="color: #9ca3af;"><i class="fas fa-info-circle mr-1"></i>Make sure your post is meaningful and respectful.</p>
+        </div>
+
+        <div class="flex gap-3">
+          <button 
+            type="submit"
+            class="flex-1 py-3 text-white font-semibold rounded-lg hover:shadow-lg transition transform hover:scale-105"
+            style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
+            <i class="fas fa-save mr-2"></i>Save Changes
+          </button>
+          <a 
+            href="/profile"
+            class="flex-1 py-3 font-semibold rounded-lg transition text-center"
+            style="background: #f3f4f6; color: #6b7280; border: 1px solid #e5e7eb; text-decoration: none;"
+          >
+            <i class="fas fa-times mr-2"></i>Cancel
+          </a>
+        </div>
+      </form>
+
+      <div class="mt-8 pt-6" style="border-color: #e5e7eb; border-top: 1px solid #e5e7eb;">
+        <p class="text-sm" style="color: #9ca3af;">
+          <i class="fas fa-clock mr-2"></i>Last edited: <strong><%= new Date(post.date).toLocaleString() %></strong>
+        </p>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

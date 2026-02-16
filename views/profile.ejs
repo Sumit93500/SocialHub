@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SocialHub - Profile</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); min-height: 100vh;">
+  <nav class="border-b sticky top-0 z-50" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-color: #e5e7eb; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <a href="/profile" class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">SocialHub</a>
+        <div class="flex items-center gap-3">
+          <a href="/profile/upload" class="px-5 py-2.5 text-white rounded-lg hover:shadow-lg transition transform hover:scale-105" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
+            <i class="fas fa-camera mr-2"></i>Upload Photo
+          </a>
+          <a href="/logout" class="px-5 py-2.5 rounded-lg transition" style="color: #ef4444; border: 1.5px solid #fecaca; hover:background: #fef2f2;">
+            <i class="fas fa-sign-out-alt mr-2"></i>Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="lg:col-span-1">
+        <div class="rounded-xl sticky top-20" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border: 1px solid #e5e7eb; box-shadow: 0 10px 30px -5px rgba(0,0,0,0.1); padding: 32px 24px;">
+          <div class="flex justify-center mb-6">
+            <div class="relative">
+              <div class="w-28 h-28 rounded-full overflow-hidden" style="background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%); padding: 3px;">
+                <img 
+                  class="w-full h-full object-cover rounded-full" 
+                  src="/images/uploads/<%=user.profilepic%>" 
+                  alt="Profile"
+                  onerror="this.src='/images/default.jpg'"
+                >
+              </div>
+              <div class="absolute bottom-0 right-0 w-6 h-6 rounded-full" style="background: #10b981; border: 2px solid white;"></div>
+            </div>
+          </div>
+
+          <div class="text-center mb-6">
+            <h2 class="text-3xl font-bold mb-1" style="color: #1f2937;"><%=user.name%></h2>
+            <p class="text-lg" style="color: #6b7280;">@<%=user.username%></p>
+            <p class="text-sm mt-2" style="color: #9ca3af;"><i class="fas fa-birthday-cake mr-1"></i><%=user.age%> years</p>
+            <p class="text-sm mt-1" style="color: #9ca3af;"><i class="fas fa-envelope mr-1"></i><%=user.email%></p>
+            
+            <div class="mt-6 pt-6 flex justify-center gap-6" style="border-color: #e5e7eb; border-top: 2px solid #e5e7eb;">
+              <div class="text-center">
+                <p class="text-2xl font-bold" style="color: #3b82f6;"><%= user.posts.length %></p>
+                <p class="text-xs" style="color: #6b7280;">Posts</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6">
+            <a 
+              href="/profile/upload" 
+              class="w-full py-3 rounded-lg text-center text-sm font-semibold transition transform hover:scale-105 block"
+              style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white;"
+            >
+              <i class="fas fa-camera mr-2"></i>Update Photo
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-2">
+        <div class="rounded-xl mb-8" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border: 1px solid #e5e7eb; box-shadow: 0 10px 30px -5px rgba(0,0,0,0.1); padding: 24px;">
+          <div class="flex gap-4">
+            <div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 ring-2" style="ring-color: #3b82f6;">
+              <img 
+                class="w-full h-full object-cover" 
+                src="/images/uploads/<%=user.profilepic%>" 
+                alt="Your Profile"
+                onerror="this.src='/images/default.jpg'"
+              >
+            </div>
+            <div class="flex-1">
+              <form method="post" action="/post" class="space-y-4">
+                <textarea 
+                  placeholder="What's on your mind?" 
+                  class="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 resize-none transition"
+                  style="border-color: #e5e7eb; color: #1f2937; focus-ring-color: #3b82f6;"
+                  name="content"
+                  rows="3"
+                  required
+                ></textarea>
+                <div class="flex justify-end">
+                  <button 
+                    type="submit"
+                    class="px-8 py-2.5 text-white font-semibold rounded-lg hover:shadow-lg transition transform hover:scale-105"
+                    style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
+                    <i class="fas fa-paper-plane mr-2"></i>Post
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-5">
+          <div class="flex items-center gap-2 mb-6">
+            <div class="w-1 h-8" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);"></div>
+            <h3 class="text-2xl font-bold" style="color: #1f2937;">Your Posts</h3>
+          </div>
+          
+          <% if (user.posts.length === 0) { %>
+            <div class="rounded-xl text-center" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border: 2px dashed #e5e7eb; box-shadow: 0 10px 30px -5px rgba(0,0,0,0.05); padding: 48px 24px;">
+              <i class="fas fa-inbox text-6xl mb-4" style="color: #bfdbfe;"></i>
+              <h4 class="text-lg font-semibold mb-2" style="color: #6b7280;">No posts yet</h4>
+              <p style="color: #9ca3af;">Start sharing your thoughts with the community!</p>
+            </div>
+          <% } else { %>
+            <% user.posts.reverse().forEach(function(post) { %>
+              <div class="rounded-xl hover:shadow-xl transition transform hover:-translate-y-1 duration-300" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border: 1px solid #e5e7eb; box-shadow: 0 10px 30px -5px rgba(0,0,0,0.1); padding: 20px;">
+                <div class="flex justify-between items-start mb-4">
+                  <div class="flex gap-3 flex-1">
+                    <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 ring-2" style="ring-color: #3b82f6;">
+                      <img 
+                        class="w-full h-full object-cover" 
+                        src="/images/uploads/<%=user.profilepic%>" 
+                        alt="Profile"
+                        onerror="this.src='/images/default.jpg'"
+                      >
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-sm" style="color: #1f2937;"><%=user.name%></h4>
+                      <p class="text-xs" style="color: #9ca3af;">@<%=user.username%></p>
+                    </div>
+                  </div>
+                  
+                  <div class="flex gap-1">
+                    <a 
+                      href="/edit/<%= post._id %>" 
+                      class="px-3 py-2 rounded-lg text-sm transition hover:bg-blue-50"
+                      style="color: #10b981; text-decoration: none;"
+                      title="Edit post"
+                    >
+                      <i class="fas fa-edit"></i>
+                    </a>
+                    <a 
+                      href="/delete/<%= post._id %>" 
+                      class="px-3 py-2 rounded-lg text-sm transition hover:bg-red-50"
+                      style="color: #ef4444; text-decoration: none;"
+                      onclick="return confirm('Delete this post?')"
+                      title="Delete post"
+                    >
+                      <i class="fas fa-trash"></i>
+                    </a>
+                  </div>
+                </div>
+
+                <p class="mb-4 leading-relaxed text-base" style="color: #374151;"><%=post.content%></p>
+
+                <div class="flex items-center justify-between pt-4" style="border-color: #e5e7eb; border-top: 1px solid #e5e7eb;">
+                  <small style="color: #9ca3af;">
+                    <i class="far fa-calendar-alt mr-1.5"></i><%= new Date(post.date).toLocaleDateString('en-US', {year: 'numeric', month: 'short', day: 'numeric'}) %>
+                  </small>
+                  
+                  <a 
+                    href="/like/<%= post._id %>"
+                    class="flex items-center gap-2 transition transform hover:scale-110 py-1 px-3 rounded-lg"
+                    style="color: <%= post.likes.indexOf(user._id)=== -1 ? '#9ca3af' : '#ef4444' %>; background: rgba(59, 130, 246, 0.05);"
+                  >
+                    <i class="<%= post.likes.indexOf(user._id)=== -1 ? 'far' : 'fas' %> fa-heart"></i>
+                    <span class="text-sm font-medium"><%= post.likes.length %></span>
+                  </a>
+                </div>
+              </div>
+            <% }) %>
+          <% } %>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>
