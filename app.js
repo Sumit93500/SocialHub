@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const userModel = require("./models/user");
@@ -9,7 +10,6 @@ const jwt = require("jsonwebtoken");
 const crypto = require('crypto');
 const upload = require('./config/multerconfig');
 const validator = require('validator');
-require('dotenv').config();
 
 app.set('view engine','ejs');
 app.use(express.json());
