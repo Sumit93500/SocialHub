@@ -31,12 +31,12 @@
           <div class="flex justify-center mb-6">
             <div class="relative">
               <div class="w-28 h-28 rounded-full overflow-hidden" style="background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%); padding: 3px;">
-                <img 
-                  class="w-full h-full object-cover rounded-full" 
-                  src="/images/uploads/<%=user.profilepic%>" 
-                  alt="Profile"
-                  onerror="this.src='/images/default.jpg'"
-                >
+                <img
+  class="w-full h-full object-cover rounded-full"
+  src="/images/uploads/<%= user.profilepic || 'default.jpg' %>"
+  alt="Profile"
+  onerror="this.onerror=null; this.src='/images/default.jpg';"
+>
               </div>
               <div class="absolute bottom-0 right-0 w-6 h-6 rounded-full" style="background: #10b981; border: 2px solid white;"></div>
             </div>
@@ -72,12 +72,12 @@
         <div class="rounded-xl mb-8" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border: 1px solid #e5e7eb; box-shadow: 0 10px 30px -5px rgba(0,0,0,0.1); padding: 24px;">
           <div class="flex gap-4">
             <div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 ring-2" style="ring-color: #3b82f6;">
-              <img 
-                class="w-full h-full object-cover" 
-                src="/images/uploads/<%=user.profilepic%>" 
-                alt="Your Profile"
-                onerror="this.src='/images/default.jpg'"
-              >
+              <img
+  class="w-full h-full object-cover"
+  src="/images/uploads/<%= user.profilepic || 'default.jpg' %>"
+  alt="Your Profile"
+  onerror="this.onerror=null; this.src='/images/default.jpg';"
+>
             </div>
             <div class="flex-1">
               <form method="post" action="/post" class="space-y-4">
@@ -120,12 +120,12 @@
                 <div class="flex justify-between items-start mb-4">
                   <div class="flex gap-3 flex-1">
                     <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 ring-2" style="ring-color: #3b82f6;">
-                      <img 
-                        class="w-full h-full object-cover" 
-                        src="/images/uploads/<%=user.profilepic%>" 
-                        alt="Profile"
-                        onerror="this.src='/images/default.jpg'"
-                      >
+                      <img
+  class="w-full h-full object-cover"
+  src="/images/uploads/<%= user.profilepic || 'default.jpg' %>"
+  alt="Profile"
+  onerror="this.onerror=null; this.src='/images/default.jpg';"
+>
                     </div>
                     <div>
                       <h4 class="font-bold text-sm" style="color: #1f2937;"><%=user.name%></h4>
