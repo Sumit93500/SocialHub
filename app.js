@@ -44,15 +44,27 @@ function isLoggedIn(req,res,next){
   }
 }
 
-function getReturnTo(req, defaultUrl = '/profile') {
-  let target = req.body.returnTo || req.query.returnTo || req.get('referer') || defaultUrl;
-  if (req.query.scrollTo) {
-    let anchor = req.query.scrollTo.startsWith('#') ? req.query.scrollTo : `#${req.query.scrollTo}`;
-    if (!target.includes(anchor)) {
-      target += anchor;
+function getReturnTo(req, defaultUrl = "/profile") {
+    const body = req.body || {};
+    const query = req.query || {};
+
+    let target =
+        body.returnTo ||
+        query.returnTo ||
+        req.get("referer") ||
+        defaultUrl;
+
+    if (query.scrollTo) {
+        const anchor = query.scrollTo.startsWith("#")
+            ? query.scrollTo
+            : "#" + query.scrollTo;
+
+        if (!target.includes(anchor)) {
+            target += anchor;
+        }
     }
-  }
-  return target;
+
+    return target;
 }
 
 // ================= HOME ROUTE =================
