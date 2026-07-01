@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -6,178 +6,831 @@
   <title>SocialHub - Profile</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    html{
+    scroll-behavior:smooth;
+}
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, system-ui, sans-serif;
+      background: radial-gradient(circle at 12% 15%, rgba(56,189,248,0.18), transparent 20%),
+                  radial-gradient(circle at 88% 8%, rgba(168,85,247,0.16), transparent 20%),
+                  linear-gradient(180deg, #0b1120 0%, #0f172a 55%, #020617 100%);
+      color: #e2e8f0;
+    }
+    .page-shell{
+    max-width:1600px;
+    margin:0 auto;
+    padding:1.5rem 2rem 3rem;
+}
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(20px);
+      background: rgba(7, 14, 33, 0.88);
+      border-bottom: 1px solid rgba(148,163,184,0.12);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.18);
+    }
+    .navbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 1.5rem;
+    }
+    .logo {
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: #ffffff;
+      text-decoration: none;
+    }
+    .nav-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+      align-items: center;
+    }
+    .btn-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      border-radius: 999px;
+      padding: 0.95rem 1.4rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #38bdf8 0%, #3b82f6 100%);
+      color: white;
+      box-shadow: 0 18px 45px rgba(56,189,248,0.24);
+    }
+    .btn-secondary {
+      border: 1px solid rgba(148,163,184,0.18);
+      background: rgba(15,23,42,0.8);
+      color: #cbd5e1;
+    }
+    .btn-pill:hover {
+      transform: translateY(-1px);
+      opacity: 0.95;
+    }
+   .layout-grid{
+    display:grid;
+
+    grid-template-columns:
+        320px      /* profile column */
+        950px      /* posts */
+        220px;     /* right sidebar */
+
+    gap:24px;
+
+    max-width:1550px;
+
+    margin:0 auto;
+}
+  .left-panel{
+    width:300px;
+    min-width:300px;
+
+    position:sticky;
+    top:90px;
+
+    align-self:start;
+
+    height:calc(100vh - 114px);
+
+    display:flex;
+}
+  .right-panel{
+    display:grid;
+
+    gap:24px;
+
+    position:sticky;
+
+    top:100px;
+
+    align-self:start;
+
+    height:fit-content;
+}
+  .center-column{
+    width:100%;
+
+    max-width:1100px;
+
+    display:grid;
+
+    gap:24px;
+}
+    .card {
+      border-radius: 2rem;
+      background: rgba(15,23,42,0.94);
+      border: 1px solid rgba(255,255,255,0.04);
+      box-shadow: 0 40px 90px rgba(0,0,0,0.2);
+      backdrop-filter: blur(20px);
+    }
+    .card-padding {
+      padding: 2.25rem;
+    }
+   .profile-card{
+    width:100%;
+
+    min-width:280px;
+
+    max-width:320px;
+
+    padding:32px 28px;
+
+    border-radius:30px;
+
+    background:rgba(8,16,40,.75);
+
+    backdrop-filter:blur(20px);
+
+    border:1px solid rgba(255,255,255,.06);
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.45),
+        inset 0 1px rgba(255,255,255,.04);
+
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+
+    gap:24px;
+
+    height:100%;
+
+    overflow-y:auto;
+
+    box-sizing:border-box;
+}
+    .profile-avatar {
+      width: 128px;
+      height: 128px;
+      border-radius: 2rem;
+      overflow: hidden;
+      border: 4px solid rgba(56,189,248,0.18);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.22);
+      background: linear-gradient(135deg, rgba(15,23,42,0.95), rgba(15,23,42,0.7));
+    }
+    .profile-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .profile-heading {
+      display: grid;
+      gap: 0.45rem;
+      text-align: center;
+    }
+    .profile-heading h2 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+    .profile-heading p {
+      margin: 0;
+      color: #94a3b8;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .profile-meta {
+      display: grid;
+      gap: 0.85rem;
+    }
+    .quick-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      width: 100%;
+      margin-top: 0.25rem;
+    }
+    .quick-actions .pill-button {
+      width: 100%;
+      justify-content: center;
+      padding: 1rem 1.25rem;
+    }
+   .post-list{
+    display:grid;
+
+    gap:24px;
+
+    width:100%;
+
+    max-width:1100px;
+
+    margin:0;
+}
+    .meta-pill{
+    width:100%;
+
+    box-sizing:border-box;
+
+    padding:16px 18px;
+
+    border-radius:18px;
+
+    overflow:hidden;
+}
+    .meta-pill i {
+      min-width: 1.35rem;
+      text-align: center;
+      color: #38bdf8;
+    }
+    .meta-pill span{
+    flex:1;
+
+    min-width:0;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+
+    white-space:nowrap;
+}
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+    .stat-card {
+      border-radius: 1.75rem;
+      padding: 1.4rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(148,163,184,0.1);
+      text-align: center;
+      color: #e2e8f0;
+    }
+    .stat-card strong {
+      display: block;
+      font-size: 2rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+    .stat-card span {
+      display: block;
+      margin-top: 0.35rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: #94a3b8;
+      font-size: 0.75rem;
+    }
+    .hero-panel {
+      display: grid;
+      gap: 1.5rem;
+    }
+    .hero-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.75rem 1rem;
+      border-radius: 999px;
+      background: rgba(56,189,248,0.12);
+      color: #bae6fd;
+      font-size: 0.85rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      width: fit-content;
+    }
+    .hero-title{
+    margin:0;
+
+    font-size:clamp(2rem,4vw,4rem);
+
+    color:#fff;
+
+    line-height:1;
+
+    font-weight:900;
+
+    letter-spacing:-0.04em;
+}
+    .hero-copy{
+    margin:0;
+
+    color:#cbd5e1;
+
+    line-height:1.8;
+
+    font-size:1.05rem;
+
+    max-width:600px;
+}
+    .post-box {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(148,163,184,0.12);
+      border-radius: 2rem;
+      padding: 2rem;
+    }
+    .post-box textarea {
+      width: 100%;
+      min-height: 180px;
+      border-radius: 1.75rem;
+      border: 1px solid rgba(148,163,184,0.12);
+      background: rgba(255,255,255,0.04);
+      color: #e2e8f0;
+      padding: 1.4rem 1.5rem;
+      resize: none;
+      outline: none;
+      font-size: 1rem;
+      box-shadow: inset 0 1px 2px rgba(255,255,255,0.04);
+    }
+    .post-box textarea::placeholder {
+      color: #94a3b8;
+    }
+    .post-footer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 1.25rem;
+    }
+    .post-footer p {
+      margin: 0;
+      color: #94a3b8;
+    }
+    .post-card {
+      border-radius: 2rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 2rem;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.18);
+      display: grid;
+      gap: 1.5rem;
+      scroll-margin-top: 120px;
+    }
+    .post-header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .post-author {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    .post-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 1.75rem;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: 0 18px 34px rgba(0,0,0,0.18);
+    }
+    .post-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .post-author-info h3 {
+      margin: 0;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+    .post-author-info p {
+      margin: 0.2rem 0 0;
+      color: #94a3b8;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+    }
+    .post-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: flex-end;
+      align-items: center;
+    }
+    .pill-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-radius: 999px;
+      padding: 0.8rem 1rem;
+      border: 1px solid rgba(148,163,184,0.14);
+      background: rgba(255,255,255,0.06);
+      color: #cbd5e1;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .pill-button:hover {
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.09);
+    }
+    .pill-button.active,
+    .pill-button.active:hover {
+      background: rgba(239,68,68,0.95);
+      border-color: rgba(248,113,113,0.4);
+      color: #ffffff;
+    }
+    .pill-button.delete.active,
+    .pill-button.delete.active:hover {
+      background: rgba(248,113,113,0.95);
+      border-color: rgba(248,113,113,0.4);
+      color: #ffffff;
+    }
+    .pill-button.edit.active,
+    .pill-button.edit.active:hover {
+      background: rgba(59,130,246,0.95);
+      border-color: rgba(96,165,250,0.4);
+      color: #ffffff;
+    }
+    .post-body {
+      color: #d1d5db;
+      font-size: 1rem;
+      line-height: 1.85;
+    }
+    .post-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      color: #94a3b8;
+      font-size: 0.95rem;
+    }
+    .post-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(148,163,184,0.1);
+    }
+    .comment-stack {
+      display: grid;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .comment-card {
+      border-radius: 1.75rem;
+      background: rgba(15,23,42,0.92);
+      border: 1px solid rgba(56,189,248,0.2);
+      padding: 1.5rem;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.18);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .comment-card:hover {
+      transform: translateY(-1px);
+      background: rgba(15,23,42,0.98);
+    }
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 0.85rem;
+    }
+    .comment-header h4 {
+      margin: 0;
+      font-size: 1rem;
+      color: #ffffff;
+      font-weight: 800;
+    }
+    .comment-header p {
+      margin: 0;
+      color: #94a3b8;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+    .comment-body {
+      margin: 0;
+      color: #cbd5e1;
+      line-height: 1.8;
+      white-space: pre-wrap;
+    }
+    .comment-meta-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.8rem;
+      border-radius: 999px;
+      background: rgba(56,189,248,0.14);
+      color: #bae6fd;
+      font-size: 0.78rem;
+    }
+    .comment-form textarea {
+      width: 100%;
+      border-radius: 1.5rem;
+      border: 1px solid rgba(148,163,184,0.12);
+      background: rgba(255,255,255,0.04);
+      color: #e2e8f0;
+      padding: 1rem 1.2rem;
+      outline: none;
+      resize: none;
+      font-size: 0.98rem;
+      box-shadow: inset 0 1px 2px rgba(255,255,255,0.04);
+    }
+    .comment-form textarea::placeholder {
+      color: #94a3b8;
+    }
+    @media (max-width: 1080px) {
+      .layout-grid {
+        grid-template-columns: 1fr;
+      }
+      .left-panel,
+      .right-panel,
+      .center-column {
+        width: 100%;
+      }
+      .left-panel {
+        position: static;
+        height: auto;
+      }
+      .profile-card {
+        height: auto;
+      }
+      .center-column {
+        max-width: 100%;
+      }
+      .post-list {
+        max-width: 100%;
+      }
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .post-header,
+      .post-actions,
+      .post-footer {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .post-actions a,
+      .post-footer a,
+      .post-footer button,
+      .btn-pill {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+    @media (max-width: 768px) {
+      .page-shell {
+        padding: 1rem;
+      }
+      .navbar-inner {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .nav-actions {
+        justify-content: flex-end;
+      }
+      .hero-panel,
+      .profile-card,
+      .post-card,
+      .profile-panel {
+        padding: 1.5rem;
+      }
+      .post-box textarea,
+      .comment-form textarea {
+        min-height: 140px;
+      }
+      .post-header,
+      .post-meta,
+      .comment-header {
+        gap: 0.75rem;
+      }
+      .post-author,
+      .comment-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .post-actions,
+      .post-footer {
+        gap: 0.75rem;
+      }
+      .post-meta span,
+      .comment-meta-pill {
+        width: 100%;
+        justify-content: center;
+      }
+      .post-image img {
+        max-height: 320px;
+      }
+    }
+  </style>
 </head>
-<body style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); min-height: 100vh;">
-  <nav class="border-b sticky top-0 z-50" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-color: #e5e7eb; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between items-center h-16">
-        <a href="/profile" class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">SocialHub</a>
-        <div class="flex items-center gap-3">
-          <a href="/profile/upload" class="px-5 py-2.5 text-white rounded-lg hover:shadow-lg transition transform hover:scale-105" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
-            <i class="fas fa-camera mr-2"></i>Upload Photo
-          </a>
-          <a href="/logout" class="px-5 py-2.5 rounded-lg transition" style="color: #ef4444; border: 1.5px solid #fecaca; hover:background: #fef2f2;">
-            <i class="fas fa-sign-out-alt mr-2"></i>Logout
-          </a>
-        </div>
+<body>
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="/profile" class="logo">SocialHub</a>
+      <div class="nav-actions">
+        <a href="/profile/upload" class="btn-pill btn-primary"><i class="fas fa-camera"></i> Upload Photo</a>
+        <a href="/logout" class="btn-pill btn-secondary"><i class="fas fa-sign-out-alt"></i> Logout</a>
       </div>
     </div>
-  </nav>
+  </header>
 
-  <div class="max-w-6xl mx-auto px-4 py-8">
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div class="lg:col-span-1">
-        <div class="rounded-xl sticky top-20" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border: 1px solid #e5e7eb; box-shadow: 0 10px 30px -5px rgba(0,0,0,0.1); padding: 32px 24px;">
-          <div class="flex justify-center mb-6">
-            <div class="relative">
-              <div class="w-28 h-28 rounded-full overflow-hidden" style="background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%); padding: 3px;">
-                <img
-  class="w-full h-full object-cover rounded-full"
-  src="/images/uploads/<%= user.profilepic || 'default.jpg' %>"
-  alt="Profile"
-  onerror="this.onerror=null; this.src='/images/default.jpg';"
->
+  <main class="page-shell">
+    <div class="layout-grid">
+      <aside class="left-panel">
+        <section class="card profile-card card-padding">
+          <div class="profile-avatar">
+            <img
+              src="/images/uploads/<%= user.profilepic || 'default.jpg' %>"
+              alt="Profile"
+              onerror="this.onerror=null; this.src='/images/default.jpg';"
+            />
+          </div>
+          <div class="profile-heading">
+            <h2><%= user.name %></h2>
+            <p>@<%= user.username %></p>
+          </div>
+          <div class="profile-meta">
+            <div class="meta-pill"><i class="fas fa-birthday-cake"></i><span><%= user.age %> years</span></div>
+            <div class="meta-pill"><i class="fas fa-envelope"></i><span><%= user.email %></span></div>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <strong><%= user.posts.length %></strong>
+              <span>Posts</span>
+            </div>
+            <div class="stat-card">
+              <strong><%= posts.length %></strong>
+              <span>Feed</span>
+            </div>
+          </div>
+         <div class="quick-actions">
+  <a href="/profile/upload" class="pill-button btn-primary">
+    <i class="fas fa-camera"></i>
+    Update Photo
+  </a>
+
+  <a href="#feed-section" class="pill-button btn-secondary">
+    <i class="fas fa-newspaper"></i>
+    View Feed
+  </a>
+</div>
+        </section>
+      </aside>
+
+      <section class="center-column">
+        <section class="card card-padding hero-panel">
+          <span class="hero-label"><i class="fas fa-gem"></i> Luxury Experience</span>
+         <h1 class="hero-title">
+What's happening today?
+</h1>
+
+<p class="hero-copy">
+Share your moments, ideas and updates with your community.
+</p>
+          <div class="post-box">
+            <form method="post" action="/post" enctype="multipart/form-data" class="space-y-4">
+              <textarea
+                name="content"
+                rows="5"
+                placeholder="What are you thinking about right now?"
+              ></textarea>
+              <label class="block text-sm text-slate-300">
+                <span class="mb-2 inline-block">Attach an image</span>
+                <input
+                  type="file"
+                  name="image"
+                  accept="image/*"
+                  class="w-full rounded-2xl border border-slate-700 bg-slate-950/70 px-4 py-3 text-slate-100 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-500/30"
+                />
+              </label>
+              <div class="post-footer">
+                <p>Share a premium post with your community.</p>
+                <button type="submit" class="btn-pill btn-primary"><i class="fas fa-paper-plane"></i> Post</button>
               </div>
-              <div class="absolute bottom-0 right-0 w-6 h-6 rounded-full" style="background: #10b981; border: 2px solid white;"></div>
-            </div>
+            </form>
           </div>
+        </section>
 
-          <div class="text-center mb-6">
-            <h2 class="text-3xl font-bold mb-1" style="color: #1f2937;"><%=user.name%></h2>
-            <p class="text-lg" style="color: #6b7280;">@<%=user.username%></p>
-            <p class="text-sm mt-2" style="color: #9ca3af;"><i class="fas fa-birthday-cake mr-1"></i><%=user.age%> years</p>
-            <p class="text-sm mt-1" style="color: #9ca3af;"><i class="fas fa-envelope mr-1"></i><%=user.email%></p>
-            
-            <div class="mt-6 pt-6 flex justify-center gap-6" style="border-color: #e5e7eb; border-top: 2px solid #e5e7eb;">
-              <div class="text-center">
-                <p class="text-2xl font-bold" style="color: #3b82f6;"><%= user.posts.length %></p>
-                <p class="text-xs" style="color: #6b7280;">Posts</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-6">
-            <a 
-              href="/profile/upload" 
-              class="w-full py-3 rounded-lg text-center text-sm font-semibold transition transform hover:scale-105 block"
-              style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white;"
-            >
-              <i class="fas fa-camera mr-2"></i>Update Photo
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div class="lg:col-span-2">
-        <div class="rounded-xl mb-8" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border: 1px solid #e5e7eb; box-shadow: 0 10px 30px -5px rgba(0,0,0,0.1); padding: 24px;">
-          <div class="flex gap-4">
-            <div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 ring-2" style="ring-color: #3b82f6;">
-              <img
-  class="w-full h-full object-cover"
-  src="/images/uploads/<%= user.profilepic || 'default.jpg' %>"
-  alt="Your Profile"
-  onerror="this.onerror=null; this.src='/images/default.jpg';"
->
-            </div>
-            <div class="flex-1">
-              <form method="post" action="/post" class="space-y-4">
-                <textarea 
-                  placeholder="What's on your mind?" 
-                  class="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 resize-none transition"
-                  style="border-color: #e5e7eb; color: #1f2937; focus-ring-color: #3b82f6;"
-                  name="content"
-                  rows="3"
-                  required
-                ></textarea>
-                <div class="flex justify-end">
-                  <button 
-                    type="submit"
-                    class="px-8 py-2.5 text-white font-semibold rounded-lg hover:shadow-lg transition transform hover:scale-105"
-                    style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
-                    <i class="fas fa-paper-plane mr-2"></i>Post
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-
-        <div class="space-y-5">
-          <div class="flex items-center gap-2 mb-6">
-            <div class="w-1 h-8" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);"></div>
-            <h3 class="text-2xl font-bold" style="color: #1f2937;">Your Posts</h3>
-          </div>
-          
-          <% if (user.posts.length === 0) { %>
-            <div class="rounded-xl text-center" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border: 2px dashed #e5e7eb; box-shadow: 0 10px 30px -5px rgba(0,0,0,0.05); padding: 48px 24px;">
-              <i class="fas fa-inbox text-6xl mb-4" style="color: #bfdbfe;"></i>
-              <h4 class="text-lg font-semibold mb-2" style="color: #6b7280;">No posts yet</h4>
-              <p style="color: #9ca3af;">Start sharing your thoughts with the community!</p>
-            </div>
+        <section id="feed-section" class="post-list">
+          <% if (posts.length === 0) { %>
+            <section class="card card-padding text-center">
+              <i class="fas fa-inbox text-5xl text-slate-400 mb-5"></i>
+              <h2 class="text-2xl font-semibold text-white">No posts yet</h2>
+              <p class="mt-3 text-slate-400">Create the first luxury post and bring your premium feed to life.</p>
+            </section>
           <% } else { %>
-            <% user.posts.reverse().forEach(function(post) { %>
-              <div class="rounded-xl hover:shadow-xl transition transform hover:-translate-y-1 duration-300" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border: 1px solid #e5e7eb; box-shadow: 0 10px 30px -5px rgba(0,0,0,0.1); padding: 20px;">
-                <div class="flex justify-between items-start mb-4">
-                  <div class="flex gap-3 flex-1">
-                    <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 ring-2" style="ring-color: #3b82f6;">
+            <% posts.forEach(function(post) { %>
+              <article id="post-<%= post._id %>" class="post-card">
+                <div class="post-header">
+                  <div class="post-author">
+                    <a href="/user/<%= post.user ? post.user._id : '' %>" class="post-avatar" title="View profile">
                       <img
-  class="w-full h-full object-cover"
-  src="/images/uploads/<%= user.profilepic || 'default.jpg' %>"
-  alt="Profile"
-  onerror="this.onerror=null; this.src='/images/default.jpg';"
->
-                    </div>
-                    <div>
-                      <h4 class="font-bold text-sm" style="color: #1f2937;"><%=user.name%></h4>
-                      <p class="text-xs" style="color: #9ca3af;">@<%=user.username%></p>
+                        src="/images/uploads/<%= post.user && post.user.profilepic ? post.user.profilepic : 'default.jpg' %>"
+                        alt="Author"
+                        onerror="this.onerror=null; this.src='/images/default.jpg';"
+                      />
+                    </a>
+                    <div class="post-author-info">
+                      <h3><a href="/user/<%= post.user ? post.user._id : '' %>" class="text-white hover:text-sky-300"><%= post.user ? post.user.name : 'Unknown User' %></a></h3>
+                      <p><a href="/user/<%= post.user ? post.user._id : '' %>" class="text-slate-400 hover:text-slate-100">@<%= post.user ? post.user.username : 'unknown' %></a></p>
                     </div>
                   </div>
-                  
-                  <div class="flex gap-1">
-                    <a 
-                      href="/edit/<%= post._id %>" 
-                      class="px-3 py-2 rounded-lg text-sm transition hover:bg-blue-50"
-                      style="color: #10b981; text-decoration: none;"
-                      title="Edit post"
-                    >
-                      <i class="fas fa-edit"></i>
-                    </a>
-                    <a 
-                      href="/delete/<%= post._id %>" 
-                      class="px-3 py-2 rounded-lg text-sm transition hover:bg-red-50"
-                      style="color: #ef4444; text-decoration: none;"
-                      onclick="return confirm('Delete this post?')"
-                      title="Delete post"
-                    >
-                      <i class="fas fa-trash"></i>
-                    </a>
+                  <div class="post-actions">
+                    <% if (post.user && post.user._id.toString() === user._id.toString()) { %>
+                      <a href="/edit/<%= post._id %>" class="pill-button edit"><i class="fas fa-edit"></i>Edit</a>
+                      <a href="/delete/<%= post._id %>" class="pill-button delete" onclick="return confirm('Delete this post?')"><i class="fas fa-trash"></i>Delete</a>
+                    <% } %>
+                    <% let liked = post.likes.some(like => like.toString() === user._id.toString()); %>
+                    <a href="/like/<%= post._id %>?returnTo=/profile&scrollTo=post-<%= post._id %>" class="pill-button <%= liked ? 'active' : '' %>"><i class="<%= liked ? 'fas' : 'far' %> fa-heart"></i><span><%= post.likes.length %></span></a>
                   </div>
                 </div>
-
-                <p class="mb-4 leading-relaxed text-base" style="color: #374151;"><%=post.content%></p>
-
-                <div class="flex items-center justify-between pt-4" style="border-color: #e5e7eb; border-top: 1px solid #e5e7eb;">
-                  <small style="color: #9ca3af;">
-                    <i class="far fa-calendar-alt mr-1.5"></i><%= new Date(post.date).toLocaleDateString('en-US', {year: 'numeric', month: 'short', day: 'numeric'}) %>
-                  </small>
-                  
-                  <a 
-                    href="/like/<%= post._id %>"
-                    class="flex items-center gap-2 transition transform hover:scale-110 py-1 px-3 rounded-lg"
-                    style="color: <%= post.likes.indexOf(user._id)=== -1 ? '#9ca3af' : '#ef4444' %>; background: rgba(59, 130, 246, 0.05);"
-                  >
-                    <i class="<%= post.likes.indexOf(user._id)=== -1 ? 'far' : 'fas' %> fa-heart"></i>
-                    <span class="text-sm font-medium"><%= post.likes.length %></span>
-                  </a>
+                <div class="post-body">
+                  <% if (post.content && post.content.trim().length > 0) { %>
+                    <p><%= post.content %></p>
+                  <% } %>
                 </div>
-              </div>
+                <% if (post.image) { %>
+                  <div class="rounded-[1.75rem] overflow-hidden border border-slate-700 bg-slate-950/70">
+                    <img src="/images/uploads/<%= post.image %>" alt="Post image" class="w-full max-h-[400px] object-cover" onerror="this.onerror=null; this.src='/images/default.jpg';" />
+                  </div>
+                <% } %>
+                <div class="post-meta">
+                  <span><i class="far fa-calendar-alt"></i><%= new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) %></span>
+                  <span>Comments <strong><%= post.comments ? post.comments.length : 0 %></strong></span>
+                </div>
+                <div class="comment-stack">
+                  <% if (post.comments && post.comments.length > 0) { %>
+                    <% post.comments.forEach(function(comment) { %>
+                      <div class="comment-card">
+                        <div class="comment-header">
+                          <div>
+                            <h4><%= comment.user ? comment.user.name : 'Unknown' %></h4>
+                            <p>@<%= comment.user ? comment.user.username : 'unknown' %></p>
+                          </div>
+                          <span class="comment-meta-pill"><i class="far fa-calendar-alt"></i> <%= new Date(comment.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) %></span>
+                        </div>
+                        <p class="comment-body"><%= comment.text %></p>
+                      </div>
+                    <% }) %>
+                  <% } else { %>
+                    <div class="comment-card text-center text-slate-400">No comments yet. Be the first to reply.</div>
+                  <% } %>
+                </div>
+                <form method="post" action="/comment/<%= post._id %>" class="comment-form">
+                  <input type="hidden" name="returnTo" value="/profile#post-<%= post._id %>">
+                  <textarea
+                    name="text"
+                    rows="2"
+                    required
+                    placeholder="Write a comment..."
+                  ></textarea>
+                  <div class="post-footer" style="justify-content:flex-end;">
+                    <button type="submit" class="btn-pill btn-primary"><i class="fas fa-comment"></i> Comment</button>
+                  </div>
+                </form>
+              </article>
             <% }) %>
           <% } %>
-        </div>
-
-      </div>
-
+        </section>
+      </section>
+      <aside class="right-panel">
+        <section class="card card-padding">
+          <h2 class="panel-title">Trending Topics</h2>
+          <ul class="panel-list">
+            <li>#PremiumFeed</li>
+            <li>#DesignSystem</li>
+            <li>#LuxurySocial</li>
+            <li>#ProductLaunch</li>
+          </ul>
+        </section>
+        <section class="card card-padding">
+          <h2 class="panel-title">Suggested Users</h2>
+          <ul class="panel-list">
+            <li>@diana_creative</li>
+            <li>@noah_studio</li>
+            <li>@zen.marketing</li>
+          </ul>
+        </section>
+        <section class="card card-padding">
+          <h2 class="panel-title">Recent Activity</h2>
+          <ul class="panel-list">
+            <li>U1 liked your post</li>
+            <li>New comment on premium feed</li>
+            <li>Profile updated 2h ago</li>
+          </ul>
+        </section>
+      </aside>
     </div>
-  </div>
+  </main>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const scrollTo = new URLSearchParams(window.location.search).get('scrollTo');
+      const hash = window.location.hash || (scrollTo ? `#${scrollTo}` : '');
+      if (hash) {
+        const target = document.querySelector(hash);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+    });
+  </script>
 </body>
 </html>

@@ -44,6 +44,17 @@ function isLoggedIn(req,res,next){
   }
 }
 
+function getReturnTo(req, defaultUrl = '/profile') {
+  let target = req.body.returnTo || req.query.returnTo || req.get('referer') || defaultUrl;
+  if (req.query.scrollTo) {
+    let anchor = req.query.scrollTo.startsWith('#') ? req.query.scrollTo : `#${req.query.scrollTo}`;
+    if (!target.includes(anchor)) {
+      target += anchor;
+    }
+  }
+  return target;
+}
+
 // ================= HOME ROUTE =================
 app.get('/',(req,res)=>{
   res.render("index");
@@ -72,14 +83,17 @@ app.post('/upload',isLoggedIn,upload.single("image"),async (req,res)=>{
 // ================= LIKE POST =================
 app.get("/like/:id",isLoggedIn,async(req,res)=>{
   try {
-    let post = await postModel.findOne({_id:req.params.id}).populate("user");
-    if(post.likes.indexOf(req.user.userid) === -1) {
+    let post = await postModel.findById(req.params.id);
+    if (!post) return res.status(404).send('Post not found');
+    const userId = req.user.userid.toString();
+    const likeIndex = post.likes.findIndex(like => like.toString() === userId);
+    if (likeIndex === -1) {
       post.likes.push(req.user.userid);
     } else {
-      post.likes.splice(post.likes.indexOf(req.user.userid),1);
+      post.likes.splice(likeIndex, 1);
     }
     await post.save();
-    res.redirect("/profile");
+    res.redirect(getReturnTo(req, '/profile'));
   } catch (error) {
     res.status(500).send('Error liking post');
   }
@@ -89,9 +103,34 @@ app.get("/like/:id",isLoggedIn,async(req,res)=>{
 app.get("/edit/:id",isLoggedIn,async(req,res)=>{
   try {
     let post = await postModel.findOne({_id:req.params.id}).populate("user");
+    if(!post) return res.status(404).send('Post not found');
+    if(post.user._id.toString() !== req.user.userid.toString()) {
+      return res.status(403).send('You can only edit your own posts');
+    }
     res.render("edit",{post});
   } catch (error) {
     res.status(500).send('Error loading edit page');
+  }
+});
+
+// ================= COMMENT ON POST =================
+app.post('/comment/:id',isLoggedIn,async(req,res)=>{
+  try {
+    let {text} = req.body;
+    if (!text || text.trim().length === 0) {
+      return res.status(400).send('Comment cannot be empty');
+    }
+    let post = await postModel.findById(req.params.id);
+    if(!post) return res.status(404).send('Post not found');
+
+    post.comments.push({
+      user: req.user.userid,
+      text: text.trim()
+    });
+    await post.save();
+    res.redirect(getReturnTo(req, '/profile'));
+  } catch (error) {
+    res.status(500).send('Error adding comment');
   }
 });
 
@@ -143,23 +182,15 @@ app.post('/register',async(req,res)=>{
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
     
-    user = await userModel.create({
+    await userModel.create({
       username,
       email,
       age,
       name,
       password: hash
     });
-    
-    let token = jwt.sign({email, userid:user._id}, process.env.JWT_SECRET);
-    
-    res.cookie('token', token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "None"
-    });
-    
-    res.send("registered");
+
+    res.redirect('/login');
   } catch (error) {
     console.error('Registration Error:', error.message);
    fs.appendFileSync(
@@ -192,11 +223,14 @@ app.post('/login',async(req,res)=>{
     
     if(result) {
       let token = jwt.sign({email, userid:user._id}, process.env.JWT_SECRET);
-      res.cookie('token', token, {
+      let cookieOptions = {
         httpOnly: true,
-        secure: true,
         sameSite: "None"
-      });
+      };
+      if (process.env.NODE_ENV === 'production') {
+        cookieOptions.secure = true;
+      }
+      res.cookie('token', token, cookieOptions);
       res.redirect("/profile");
     } else {
       res.status(401).send('Invalid email or password');
@@ -211,25 +245,49 @@ app.post('/login',async(req,res)=>{
 app.get('/profile',isLoggedIn,async(req,res)=>{
   try {
     let user = await userModel.findOne({email:req.user.email}).populate("posts");
-    res.render('profile',{user});
+    let posts = await postModel.find()
+      .populate("user")
+      .populate("comments.user")
+      .sort({date:-1});
+    res.render('profile',{user, posts});
   } catch (error) {
     res.status(500).send('Error loading profile');
   }
 });
 
+// ================= VIEW OTHER USER PROFILE =================
+app.get('/user/:id',isLoggedIn,async(req,res)=>{
+  try {
+    let currentUser = await userModel.findOne({email:req.user.email});
+    let profileUser = await userModel.findById(req.params.id).populate('posts');
+    if (!profileUser) return res.status(404).send('User not found');
+
+    let posts = await postModel.find({ user: profileUser._id })
+      .populate('user')
+      .populate('comments.user')
+      .sort({ date: -1 });
+
+    res.render('userprofile', { currentUser, profileUser, posts });
+  } catch (error) {
+    res.status(500).send('Error loading user profile');
+  }
+});
+
 // ================= CREATE POST =================
-app.post('/post',isLoggedIn,async(req,res)=>{
+app.post('/post',isLoggedIn,upload.single('image'),async(req,res)=>{
   try {
     let user = await userModel.findOne({email:req.user.email});
     let {content} = req.body;
+    let image = req.file ? req.file.filename : null;
     
-    if (!content || content.trim().length === 0) {
-      return res.status(400).send('Post content cannot be empty');
+    if ((!content || content.trim().length === 0) && !image) {
+      return res.status(400).send('Post must include text or an image');
     }
     
     let post = await postModel.create({
-      user:user._id,
-      content
+      user: user._id,
+      content: content ? content.trim() : '',
+      image
     });
     
     user.posts.push(post._id);
@@ -237,7 +295,8 @@ app.post('/post',isLoggedIn,async(req,res)=>{
     
     res.redirect('/profile');
   } catch (error) {
-    res.status(500).send('Error creating post');
+    console.error('Error creating post:', error);
+    res.status(500).send('Error creating post: ' + error.message);
   }
 });
 
@@ -260,11 +319,15 @@ app.get('/delete/:id',isLoggedIn,async(req,res)=>{
 
 // ================= LOGOUT =================
 app.get('/logout',(req,res)=>{
-  res.cookie("token","", {
+  let cookieOptions = {
     httpOnly: true,
-    secure: true,
-    sameSite: "None"
-  });
+    sameSite: "None",
+    maxAge: 0
+  };
+  if (process.env.NODE_ENV === 'production') {
+    cookieOptions.secure = true;
+  }
+  res.cookie("token","", cookieOptions);
   res.redirect("/login");
 });
 
