@@ -81,21 +81,49 @@ app.post('/upload',isLoggedIn,upload.single("image"),async (req,res)=>{
 });
 
 // ================= LIKE POST =================
-app.get("/like/:id",isLoggedIn,async(req,res)=>{
+app.get("/like/:id", isLoggedIn, async (req, res) => {
   try {
+    console.log("===== LIKE ROUTE =====");
+    console.log("Post ID:", req.params.id);
+    console.log("User:", req.user);
+
     let post = await postModel.findById(req.params.id);
-    if (!post) return res.status(404).send('Post not found');
-    const userId = req.user.userid.toString();
-    const likeIndex = post.likes.findIndex(like => like.toString() === userId);
-    if (likeIndex === -1) {
-      post.likes.push(req.user.userid);
-    } else {
-      post.likes.splice(likeIndex, 1);
+
+    if (!post) {
+      console.log("Post not found");
+      return res.status(404).send("Post not found");
     }
+
+    console.log("Likes array:", post.likes);
+
+    const userId = String(req.user.userid);
+
+    if (!post.likes) {
+      post.likes = [];
+    }
+
+    const alreadyLiked = post.likes.some(
+      like => String(like) === userId
+    );
+
+    if (alreadyLiked) {
+      post.likes = post.likes.filter(
+        like => String(like) !== userId
+      );
+    } else {
+      post.likes.push(userId);
+    }
+
     await post.save();
-    res.redirect(getReturnTo(req, '/profile'));
+
+    console.log("Like updated successfully");
+
+    res.redirect(getReturnTo(req, "/profile"));
+
   } catch (error) {
-    res.status(500).send('Error liking post');
+    console.error("LIKE ERROR:");
+    console.error(error);
+    res.status(500).send(error.message);
   }
 });
 
