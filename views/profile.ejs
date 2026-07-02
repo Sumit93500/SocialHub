@@ -81,9 +81,9 @@
     display:grid;
 
     grid-template-columns:
-        320px      /* profile column */
-        950px      /* posts */
-        220px;     /* right sidebar */
+        320px
+        950px
+        220px;
 
     gap:24px;
 
@@ -215,6 +215,24 @@
       width: 100%;
       justify-content: center;
       padding: 1rem 1.25rem;
+    }
+    .delete-account-form {
+      width: 100%;
+      margin: 0;
+    }
+    .delete-account {
+      width: 100%;
+      justify-content: center;
+      background: rgba(239, 68, 68, 0.18);
+      border-color: rgba(248, 113, 113, 0.35);
+      color: #fecaca;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 700;
+    }
+    .delete-account:hover {
+      background: rgba(239, 68, 68, 0.95);
+      color: #ffffff;
     }
    .post-list{
     display:grid;
@@ -661,24 +679,36 @@
               <span>Feed</span>
             </div>
           </div>
-         <div class="quick-actions">
-  <a href="/profile/upload" class="pill-button btn-primary">
-    <i class="fas fa-camera"></i>
-    Update Photo
-  </a>
+          <div class="quick-actions">
+            <a href="/profile/upload" class="pill-button btn-primary">
+              <i class="fas fa-camera"></i>
+              Update Photo
+            </a>
 
-  <a href="#feed-section" class="pill-button btn-secondary">
-    <i class="fas fa-newspaper"></i>
-    View Feed
-  </a>
-</div>
+            <a href="#feed-section" class="pill-button btn-secondary">
+              <i class="fas fa-newspaper"></i>
+              View Feed
+            </a>
+
+            <form
+              method="post"
+              action="/account/delete"
+              class="delete-account-form"
+              onsubmit="return confirm('Are you sure you want to permanently delete your account? This will delete your account, posts, likes, and comments.');"
+            >
+              <button type="submit" class="pill-button delete-account">
+                <i class="fas fa-user-times"></i>
+                Delete Account
+              </button>
+            </form>
+          </div>
         </section>
       </aside>
 
       <section class="center-column">
         <section class="card card-padding hero-panel">
           <span class="hero-label"><i class="fas fa-gem"></i> Luxury Experience</span>
-         <h1 class="hero-title">
+          <h1 class="hero-title">
 What's happening today?
 </h1>
 

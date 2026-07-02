@@ -447,6 +447,49 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something went wrong on our server');
 });
 
+app.post('/account/delete', isLoggedIn, async (req, res) => {
+  try {
+    const userId = req.user.userid;
+
+    const user = await userModel.findById(userId);
+
+    if (!user) {
+      res.cookie('token', '', { maxAge: 0 });
+      return res.redirect('/login');
+    }
+
+    await postModel.deleteMany({ user: userId });
+
+    await postModel.updateMany(
+      {},
+      {
+        $pull: {
+          likes: userId,
+          comments: { user: userId }
+        }
+      }
+    );
+
+    await userModel.findByIdAndDelete(userId);
+
+    const cookieOptions = {
+      httpOnly: true,
+      sameSite: "Lax",
+      maxAge: 0
+    };
+
+    if (process.env.NODE_ENV === 'production') {
+      cookieOptions.secure = true;
+    }
+
+    res.cookie("token", "", cookieOptions);
+    res.redirect("/");
+  } catch (error) {
+    console.error('Account Delete Error:', error);
+    res.status(500).send('Error deleting account');
+  }
+});
+
 app.listen(process.env.PORT || 3000, () => {
   console.log("Server is running...");
 });
