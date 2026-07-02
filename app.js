@@ -299,14 +299,14 @@ app.post('/login', async (req, res) => {
       { expiresIn: "7d" }
     );
 
-    const cookieOptions = {
-      httpOnly: true,
-      sameSite: "None"
-    };
+const cookieOptions = {
+  httpOnly: true,
+  sameSite: "Lax"
+};
 
-    if (process.env.NODE_ENV === 'production') {
-      cookieOptions.secure = true;
-    }
+if (process.env.NODE_ENV === 'production') {
+  cookieOptions.secure = true;
+}
 
     res.cookie('token', token, cookieOptions);
     res.redirect("/profile");
@@ -420,15 +420,14 @@ app.get('/delete/:id', isLoggedIn, async (req, res) => {
 });
 
 app.get('/logout', (req, res) => {
-  const cookieOptions = {
-    httpOnly: true,
-    sameSite: "None",
-    maxAge: 0
-  };
+ const cookieOptions = {
+  httpOnly: true,
+  sameSite: "Lax"
+};
 
-  if (process.env.NODE_ENV === 'production') {
-    cookieOptions.secure = true;
-  }
+if (process.env.NODE_ENV === 'production') {
+  cookieOptions.secure = true;
+}
 
   res.cookie("token", "", cookieOptions);
   res.redirect("/login");
