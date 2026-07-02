@@ -1,73 +1,374 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SocialHub - Edit Post</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, system-ui, sans-serif;
+      background:
+        radial-gradient(circle at 12% 15%, rgba(56,189,248,0.18), transparent 20%),
+        radial-gradient(circle at 88% 8%, rgba(168,85,247,0.16), transparent 20%),
+        linear-gradient(180deg, #0b1120 0%, #0f172a 55%, #020617 100%);
+      color: #e2e8f0;
+    }
+
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(20px);
+      background: rgba(7, 14, 33, 0.88);
+      border-bottom: 1px solid rgba(148,163,184,0.12);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.18);
+    }
+
+    .navbar-inner {
+      max-width: 1300px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 1.5rem;
+    }
+
+    .logo {
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: #ffffff;
+      text-decoration: none;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 0.85rem;
+      align-items: center;
+    }
+
+    .btn-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      border-radius: 999px;
+      padding: 0.95rem 1.4rem;
+      font-weight: 700;
+      text-decoration: none;
+      border: 1px solid rgba(148,163,184,0.18);
+      transition: transform 0.25s ease, background 0.25s ease, opacity 0.25s ease;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 1rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #38bdf8 0%, #3b82f6 100%);
+      color: #ffffff;
+      box-shadow: 0 18px 45px rgba(56,189,248,0.24);
+      border-color: rgba(56,189,248,0.3);
+    }
+
+    .btn-secondary {
+      background: rgba(15,23,42,0.8);
+      color: #cbd5e1;
+    }
+
+    .btn-danger {
+      background: rgba(239,68,68,0.14);
+      border-color: rgba(248,113,113,0.35);
+      color: #fecaca;
+    }
+
+    .btn-pill:hover {
+      transform: translateY(-1px);
+      opacity: 0.95;
+    }
+
+    .page-shell {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      margin: 0.5rem 0 1.5rem;
+      color: #bae6fd;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .edit-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 760px) 280px;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .card {
+      border-radius: 2rem;
+      background: rgba(15,23,42,0.94);
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: 0 40px 90px rgba(0,0,0,0.24);
+      backdrop-filter: blur(20px);
+    }
+
+    .edit-card {
+      padding: 2.25rem;
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .hero-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.75rem 1rem;
+      border-radius: 999px;
+      background: rgba(56,189,248,0.12);
+      color: #bae6fd;
+      font-size: 0.85rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      width: fit-content;
+    }
+
+    .edit-title {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      line-height: 1;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: -0.04em;
+    }
+
+    .edit-copy {
+      margin: 0;
+      color: #cbd5e1;
+      line-height: 1.8;
+      font-size: 1.05rem;
+      max-width: 620px;
+    }
+
+    .form-panel {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(148,163,184,0.12);
+      border-radius: 2rem;
+      padding: 2rem;
+      display: grid;
+      gap: 1.25rem;
+    }
+
+    .field-label {
+      display: block;
+      color: #e2e8f0;
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+    }
+
+    .textarea {
+      width: 100%;
+      min-height: 300px;
+      border-radius: 1.75rem;
+      border: 1px solid rgba(148,163,184,0.16);
+      background: rgba(2,6,23,0.55);
+      color: #f8fafc;
+      padding: 1.4rem 1.5rem;
+      resize: vertical;
+      outline: none;
+      font-size: 1rem;
+      line-height: 1.8;
+      box-shadow: inset 0 1px 2px rgba(255,255,255,0.04);
+      box-sizing: border-box;
+    }
+
+    .textarea:focus {
+      border-color: rgba(56,189,248,0.85);
+      box-shadow: 0 0 0 4px rgba(56,189,248,0.12);
+    }
+
+    .helper-text {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0;
+      color: #94a3b8;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .form-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 0.25rem;
+    }
+
+    .side-panel {
+      position: sticky;
+      top: 100px;
+      padding: 1.5rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .panel-title {
+      margin: 0;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .panel-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .panel-list li {
+      padding: 1rem 1.1rem;
+      border-radius: 1.25rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(148,163,184,0.08);
+      color: #cbd5e1;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 980px) {
+      .edit-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .side-panel {
+        position: static;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .navbar-inner {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .nav-actions {
+        flex-direction: column;
+      }
+
+      .btn-pill {
+        width: 100%;
+      }
+
+      .page-shell {
+        padding: 1rem 1rem 3rem;
+      }
+
+      .edit-card,
+      .form-panel {
+        padding: 1.5rem;
+      }
+
+      .form-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .textarea {
+        min-height: 240px;
+      }
+    }
+  </style>
 </head>
-<body style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); min-height: 100vh;">
-  <nav class="border-b sticky top-0 z-50" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-color: #e5e7eb; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between items-center h-16">
-        <a href="/profile" class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">SocialHub</a>
-        <a href="/logout" class="px-5 py-2.5 rounded-lg transition" style="color: #ef4444; border: 1.5px solid #fecaca;">
-          <i class="fas fa-sign-out-alt mr-2"></i>Logout
+
+<body>
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="/profile" class="logo">SocialHub</a>
+      <div class="nav-actions">
+        <a href="/profile" class="btn-pill btn-secondary">
+          <i class="fas fa-arrow-left"></i>
+          Profile
+        </a>
+        <a href="/logout" class="btn-pill btn-danger">
+          <i class="fas fa-sign-out-alt"></i>
+          Logout
         </a>
       </div>
     </div>
-  </nav>
+  </header>
 
-  <div class="max-w-2xl mx-auto px-4 py-12">
-    <a href="/profile" class="inline-flex items-center gap-2 mb-8 text-lg hover:gap-3 transition" style="color: #3b82f6; text-decoration: none;">
-      <i class="fas fa-arrow-left"></i> Back to Profile
+  <main class="page-shell">
+    <a href="/profile" class="back-link">
+      <i class="fas fa-arrow-left"></i>
+      Back to feed
     </a>
 
-    <div class="rounded-2xl" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border: 1px solid #e5e7eb; box-shadow: 0 20px 60px -10px rgba(0,0,0,0.15); padding: 40px;">
-      <div class="mb-6">
-        <h2 class="text-3xl font-bold mb-2" style="color: #1f2937;"><i class="fas fa-pencil-alt mr-2" style="color: #3b82f6;"></i>Edit Your Post</h2>
-        <p style="color: #6b7280;">Update the content of your post</p>
-      </div>
-      
-      <form method="post" action="/update/<%= post._id %>" class="space-y-6">
+    <div class="edit-layout">
+      <section class="card edit-card">
+        <span class="hero-label">
+          <i class="fas fa-pen-to-square"></i>
+          Edit Post
+        </span>
+
         <div>
-          <label class="block text-sm font-semibold mb-3" style="color: #374151;">Post Content</label>
-          <textarea 
-            placeholder="Share your thoughts..." 
-            class="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 resize-none transition"
-            style="border-color: #e5e7eb; color: #1f2937; min-height: 200px;"
-            name="content"
-            rows="8"
-            required
-          ><%=post.content%></textarea>
-          <p class="text-xs mt-2" style="color: #9ca3af;"><i class="fas fa-info-circle mr-1"></i>Make sure your post is meaningful and respectful.</p>
+          <h1 class="edit-title">Refine your update.</h1>
+          <p class="edit-copy">Update your post content and keep your SocialHub feed polished.</p>
         </div>
 
-        <div class="flex gap-3">
-          <button 
-            type="submit"
-            class="flex-1 py-3 text-white font-semibold rounded-lg hover:shadow-lg transition transform hover:scale-105"
-            style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
-            <i class="fas fa-save mr-2"></i>Save Changes
-          </button>
-          <a 
-            href="/profile"
-            class="flex-1 py-3 font-semibold rounded-lg transition text-center"
-            style="background: #f3f4f6; color: #6b7280; border: 1px solid #e5e7eb; text-decoration: none;"
-          >
-            <i class="fas fa-times mr-2"></i>Cancel
-          </a>
-        </div>
-      </form>
+        <form method="post" action="/update/<%= post._id %>" class="form-panel">
+          <div>
+            <label for="content" class="field-label">Post Content</label>
+            <textarea
+              id="content"
+              name="content"
+              class="textarea"
+              required
+              placeholder="Update your post..."
+            ><%= post.content %></textarea>
+          </div>
 
-      <div class="mt-8 pt-6" style="border-color: #e5e7eb; border-top: 1px solid #e5e7eb;">
-        <p class="text-sm" style="color: #9ca3af;">
-          <i class="fas fa-clock mr-2"></i>Last edited: <strong><%= new Date(post.date).toLocaleString() %></strong>
-        </p>
-      </div>
+          <p class="helper-text">
+            <i class="fas fa-circle-info"></i>
+            Make sure your post is meaningful and respectful before saving.
+          </p>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-pill btn-primary">
+              <i class="fas fa-floppy-disk"></i>
+              Save Changes
+            </button>
+
+            <a href="/profile" class="btn-pill btn-secondary">
+              <i class="fas fa-xmark"></i>
+              Cancel
+            </a>
+          </div>
+        </form>
+      </section>
+
+      <aside class="card side-panel">
+        <h2 class="panel-title">Editing Tips</h2>
+        <ul class="panel-list">
+          <li>Keep your update clear and easy to read.</li>
+          <li>You can return to your feed without saving.</li>
+          <li>Changes appear immediately after saving.</li>
+        </ul>
+      </aside>
     </div>
-
-  </div>
+  </main>
 </body>
 </html>
